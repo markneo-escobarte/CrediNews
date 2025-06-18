@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
 
-// Check if user is already logged in
+
 if (isLoggedIn()) {
     redirect('index.php');
 }
@@ -9,13 +9,12 @@ if (isLoggedIn()) {
 $errors = [];
 $email = '';
 
-// Process login form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
+   
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
-    // Validate input
+ 
     if (empty($email)) {
         $errors[] = "Email is required";
     }
@@ -26,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // If no errors, attempt login
     if (empty($errors)) {
-        // Get user from database
+       
         $stmt = $conn->prepare("SELECT id, username, email, password, role, is_verified FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -42,13 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['user_role'] = $user['role'];
                 
-                // Update last login time
+               
                 $update_stmt = $conn->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
                 $update_stmt->bind_param("i", $user['id']);
                 $update_stmt->execute();
                 $update_stmt->close();
                 
-                // Log the action
+               
                 logAction($user['id'], "Admin logged in");
                 
                 redirect('admin/dashboard.php', 'Welcome back, Admin!', 'success');
@@ -65,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['user_role'] = $user['role'];
                     
-                    // Update last login time
+                 
                     $update_stmt = $conn->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
                     $update_stmt->bind_param("i", $user['id']);
                     $update_stmt->execute();
@@ -106,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
@@ -135,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </nav>
 
-    <!-- Login Form -->
     <section class="py-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -200,7 +197,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer bg-dark text-white py-5">
         <div class="container">
             <div class="row">
@@ -248,11 +244,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        // Password visibility toggle
+  
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
         const email = document.querySelector('#email');
@@ -295,12 +291,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         });
 
-        // Prevent form resubmission on page refresh
+      
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
 
-        // Disable browser password autofill
+       
         email.setAttribute('autocomplete', 'new-password');
         password.setAttribute('autocomplete', 'new-password');
     </script>
