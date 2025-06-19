@@ -17,9 +17,7 @@ if (!$user['is_verified']) {
 }
 
 //submission limit
-$canSubmit = true;
-$timeRemaining = 0;
-$submissionLimit = MAX_SUBMISSIONS_PER_DAY;
+
 
 $stmt = $conn->prepare("SELECT submission_count, last_submission FROM users WHERE id = ?");
 $stmt->bind_param("i", $userId);
@@ -27,25 +25,17 @@ $stmt->execute();
 $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
 
-if ($userData['submission_count'] >= $submissionLimit) {
+if ($userData['submission_count']) {
     $lastSubmission = strtotime($userData['last_submission']);
     $currentTime = time();
     $timeDiff = $currentTime - $lastSubmission;
     
-    if ($timeDiff < 86400) { 
-        $canSubmit = false;
-        $timeRemaining = 86400 - $timeDiff;
-    } else {
-        $stmt = $conn->prepare("UPDATE users SET submission_count = 0 WHERE id = ?");
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-    }
 }
 
 $errors = [];
 $success = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $canSubmit) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $source = trim($_POST['source']);
@@ -217,15 +207,8 @@ function generateAnalysisText($content, $score) {
         <div class="container">
             <h2 class="section-title text-center">Submit News Article</h2>
             
-            <?php if (!$canSubmit): ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Submission limit reached:</strong> You have reached your daily submission limit of <?php echo $submissionLimit; ?> articles.
-                    <p class="mt-2 mb-0">You can submit again in: 
-                        <span id="countdown" data-seconds="<?php echo $timeRemaining; ?>"></span>
-                    </p>
-                </div>
-            <?php elseif ($success): ?>
+          
+            <?php if ($success): ?>
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle me-2"></i>
                     <strong>Success!</strong> Your article has been submitted successfully and is now being analyzed.
@@ -289,7 +272,6 @@ function generateAnalysisText($content, $score) {
                                 <h5><i class="fas fa-info-circle text-primary me-2"></i>Submission Guidelines</h5>
                                 <ul class="mb-0">
                                     <li>All submissions are analyzed by our AI system for credibility.</li>
-                                    <li>You can submit up to <?php echo $submissionLimit; ?> articles per day.</li>
                                     <li>Provide accurate source information to improve credibility assessment.</li>
                                     <li>For sensitive content, use the encryption option to protect your data.</li>
                                     <li>Submitted articles will be reviewed by our team if flagged by the AI system.</li>
