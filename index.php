@@ -49,7 +49,7 @@ if ($statsResult && $statsResult->num_rows > 0) {
     <title><?php echo APP_NAME; ?> - AI-Driven Fake News Detector</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="asset/css/style.css">
 </head>
 <body>
     <!-- NAVBAR CREDINEWS  -->
@@ -113,12 +113,12 @@ if ($statsResult && $statsResult->num_rows > 0) {
         </p>
         <div class="d-grid gap-2 d-md-flex">
           <a href="verify.php" class="btn btn-primary btn-lg px-4 me-md-2">Verify News</a>
-          <a href="about.php" class="btn btn-outline-secondary btn-lg px-4">Learn More</a>
+          <a href="about.php" class="btn btn-outline-secondary btn-lg px-4 text-white">Learn More</a>
         </div>
       </div>
 
       <div class="col-lg-6 text-center">
-        <img src="assets/css/images/credilowgo.png" alt="Logo" class="img-fluid" style="max-height: 300px;">
+        <img src="asset/css/images/credilowgo.png" alt="Logo" class="img-fluid" style="max-height: 300px;">
       </div>
 
     </div>
